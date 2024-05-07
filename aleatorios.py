@@ -1,6 +1,6 @@
 import sys
 
-from view import MainWindow
+from view.randomNumberView import MainWindow
 from PyQt6.QtWidgets import QApplication
 
 class Aleatorios:

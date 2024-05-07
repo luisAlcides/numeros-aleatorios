@@ -1,5 +1,5 @@
 from aleatorios import Aleatorios
-from utils import message
+from utils.util import message
 
 
 def main():
