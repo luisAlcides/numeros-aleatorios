@@ -10,7 +10,7 @@ from view.productoMedioView import ProductoMedioView
 from view.cuadradoMedioView import CuadradoMedioView
 from view.multiplicadorConstanteView import MultiplicadorConstanteView
 from view.congruencialLinealView import CongruencialLinealView
-
+from view.transformadaInversaExponencialView import TransformadaInversaExponencial
 
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -45,16 +45,19 @@ class MainWindow(QMainWindow):
         cuadrado_medio_action = QAction('Cuadrado Medio', self)
         multiplicador_constante_action = QAction('Multiplicador constante', self)
         congruencial_lineal_action = QAction('Congruencial lineal', self)
+        transformada_inversa_exponencial_action = QAction('Transformada Inversa Exponencial', self)
         
         producto_medio_action.triggered.connect(self.openProductoMedio)
         cuadrado_medio_action.triggered.connect(self.openCuadradoMedio)
         multiplicador_constante_action.triggered.connect(self.openMultiplicadorConstante)
         congruencial_lineal_action.triggered.connect(self.openCongruencialLineal)
+        transformada_inversa_exponencial_action.triggered.connect(self.openTransformadaInversaExponencial)
         
         algoritmos_menu.addAction(producto_medio_action)
         algoritmos_menu.addAction(cuadrado_medio_action)
         algoritmos_menu.addAction(multiplicador_constante_action)
         algoritmos_menu.addAction(congruencial_lineal_action)
+        algoritmos_menu.addAction(transformada_inversa_exponencial_action)
         
     
     def openProductoMedio(self):
@@ -72,6 +75,10 @@ class MainWindow(QMainWindow):
     
     def openCongruencialLineal(self):
         self.ui = CongruencialLinealView()
+        return self.ui
+    
+    def openTransformadaInversaExponencial(self):
+        self.ui = TransformadaInversaExponencial()
         return self.ui
         
         
