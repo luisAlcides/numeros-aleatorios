@@ -15,7 +15,7 @@ ico_clean = os.path.join(script_directory, 'icons', 'clean.png')
 class CongruencialLinealView(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Multiplicador Constante')
+        self.setWindowTitle('Congruencial lineal')
         self.setFont(QFont('Arial', 16))
         self.showMaximized()
 
@@ -24,13 +24,16 @@ class CongruencialLinealView(QMainWindow):
         self.Label_x0 = QLabel('X0')
         self.input_x0 = QLineEdit()
 
-        self.label_m = QLabel('m')
-        self.input_m = QLineEdit()
-        self.label_a = QLabel('a')
-        self.input_a = QLineEdit()
+        self.label_k = QLabel('k')
+        self.input_k = QLineEdit()
+        self.label_g = QLabel('g')
+        self.input_g = QLineEdit()
 
         self.label_c = QLabel('c')
         self.input_c = QLineEdit()
+
+        self.label_a = QLabel('')
+        self.label_m = QLabel('')
 
         self.label_number_random = QLabel('Numeros de variables aleatorias:')
         self.input_number_random = QLineEdit()
@@ -47,20 +50,22 @@ class CongruencialLinealView(QMainWindow):
         self.layout_buttons.addWidget(self.btn_clean)
 
         self.table = QTableWidget()
-        self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(['X', 'm', 'a', 'c', 'r'])
+        self.table.setColumnCount(2)
+        self.table.setHorizontalHeaderLabels(['X', 'r'])
 
         self.layout.addWidget(self.Label_x0)
         self.layout.addWidget(self.input_x0)
-        self.layout.addWidget(self.label_m)
-        self.layout.addWidget(self.input_m)
-        self.layout.addWidget(self.label_a)
-        self.layout.addWidget(self.input_a)
+        self.layout.addWidget(self.label_k)
+        self.layout.addWidget(self.input_k)
+        self.layout.addWidget(self.label_g)
+        self.layout.addWidget(self.input_g)
         self.layout.addWidget(self.label_c)
         self.layout.addWidget(self.input_c)
         self.layout.addWidget(self.label_number_random)
         self.layout.addWidget(self.input_number_random)
         self.layout.addLayout(self.layout_buttons)
+        self.layout.addWidget(self.label_a)
+        self.layout.addWidget(self.label_m)
         self.layout.addWidget(self.table)
 
         self.central_widget = QWidget()
@@ -71,17 +76,24 @@ class CongruencialLinealView(QMainWindow):
         try:
             randomNums = []
             Xo = int(self.input_x0.text().strip())
-            m = int(self.input_m.text().strip())
-            a = int(self.input_a.text().strip())
+            k = int(self.input_k.text().strip())
+            g = int(self.input_g.text().strip())
             c = int(self.input_c.text().strip())
             noOfRandomNums = int(self.input_number_random.text().strip())
 
-            randomNums.append({'X0': Xo, 'm': m, 'a': a, 'c': c, 'r': Xo / m})
+            m = 2 ** g
+            a = 1 + 4 * k
 
-            for i in range(1, noOfRandomNums):
-                X = ((randomNums[i - 1]['X0'] * a) + c) % m
-                r = X / m
-                randomNums.append([X, m, a, c, r])
+            for i in range(noOfRandomNums):
+                X = ((a * Xo) + c) % m
+                print(f'x = (({a} * {Xo}) + {c}) % {m} = {X}')
+                r = X / (m - 1)
+                print(f'r = {X} / ({m} - 1) = {r}')
+                randomNums.append([X, r])
+                Xo = X
+
+            self.label_a.setText(f'a = {a}')
+            self.label_m.setText(f'm = {m}')
 
             add_to_table(self.table, randomNums)
         except Exception as e:
@@ -89,10 +101,12 @@ class CongruencialLinealView(QMainWindow):
 
     def clean(self):
         self.input_x0.setText('')
-        self.input_m.setText('')
-        self.input_a.setText('')
+        self.input_k.setText('')
+        self.input_g.setText('')
         self.input_c.setText('')
+        self.label_a.setText('')
+        self.label_m.setText('')
         self.input_number_random.setText('')
         self.table.setRowCount(0)
         self.table.setColumnCount(0)
-        self.table.setHorizontalHeaderLabels(['X', 'm', 'a', 'c', 'r'])
+        self.table.setHorizontalHeaderLabels(['X', 'r'])
