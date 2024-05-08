@@ -15,6 +15,7 @@ script_directory = os.path.dirname(os.path.abspath(__file__))
 ico_solve = os.path.join(script_directory, 'icons', 'solve.png')
 ico_clean = os.path.join(script_directory, 'icons', 'clean.png')
 
+
 class EsperanzaView(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -49,6 +50,8 @@ class EsperanzaView(QMainWindow):
         self.table.setHorizontalHeaderLabels(['x', 'y', 'P', 'E(x)', 'Var'])
         self.label_ex_sum = QLabel('')
         self.label_varianza_sum = QLabel('')
+        self.label_desviacion = QLabel('')
+        self.label_mean = QLabel('')
 
         self.layout.addWidget(self.label_info)
         self.layout.addWidget(self.label_x)
@@ -58,6 +61,8 @@ class EsperanzaView(QMainWindow):
         self.layout.addLayout(self.layout_buttons)
         self.layout.addWidget(self.label_ex_sum)
         self.layout.addWidget(self.label_varianza_sum)
+        self.layout.addWidget(self.label_desviacion)
+        self.layout.addWidget(self.label_mean)
         self.layout.addWidget(self.table)
 
         self.central_widget = QWidget()
@@ -91,6 +96,8 @@ class EsperanzaView(QMainWindow):
             ex_sum = sum(ex)
             varianza = self.varianza(x, ex_sum, probabilidad)
             varianza_sum = sum(varianza)
+            desviacion_standar = np.sqrt(varianza_sum)
+            mean = np.mean(x)
 
             data = []
             i = 0
@@ -99,6 +106,8 @@ class EsperanzaView(QMainWindow):
                 i += 1
             self.label_ex_sum.setText(f'suma E(x) = {ex_sum}')
             self.label_varianza_sum.setText(f'suma Varianza = {varianza_sum}')
+            self.label_desviacion.setText(f'Desviacion estandar = {desviacion_standar}')
+            self.label_mean.setText(f'Media = {mean}')
             add_to_table(self.table, data)
         except Exception as e:
             print(e)
@@ -108,6 +117,8 @@ class EsperanzaView(QMainWindow):
         self.input_y.setText('')
         self.label_ex_sum.setText('')
         self.label_varianza_sum.setText('')
+        self.label_desviacion.setText('')
+        self.label_mean.setText('')
         self.table.setRowCount(0)
         self.table.setColumnCount(0)
         self.table.setHorizontalHeaderLabels(['x', 'y', 'P', 'E(x)', 'Var'])
