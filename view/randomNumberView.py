@@ -3,6 +3,7 @@ import os
 from PyQt6.QtGui import QAction, QFont
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QMainWindow
 
+from view.congruencialNoLinealCuadratico import CongruencialNoLinealCuadraticoView
 from view.esperanzaView import EsperanzaView
 from view.productoMedioView import ProductoMedioView
 from view.cuadradoMedioView import CuadradoMedioView
@@ -40,6 +41,7 @@ class MainWindow(QMainWindow):
         multiplicador_constante_action = QAction('Multiplicador constante', self)
         congruencial_lineal_action = QAction('Congruencial lineal', self)
         transformada_inversa_exponencial_action = QAction('Transformada Inversa Exponencial', self)
+        congruencial_no_lineal_cuadratico_action = QAction('Congruencial No Lineal Cuadratico', self)
         esperanza_action = QAction('Esperanza y Varianza', self)
 
         producto_medio_action.triggered.connect(self.openProductoMedio)
@@ -47,6 +49,7 @@ class MainWindow(QMainWindow):
         multiplicador_constante_action.triggered.connect(self.openMultiplicadorConstante)
         congruencial_lineal_action.triggered.connect(self.openCongruencialLineal)
         transformada_inversa_exponencial_action.triggered.connect(self.openTransformadaInversaExponencial)
+        congruencial_no_lineal_cuadratico_action.triggered.connect(self.openCongruencialNoLinealCuadratico)
         esperanza_action.triggered.connect(self.openEsperanza)
 
         algoritmos_menu.addAction(producto_medio_action)
@@ -54,6 +57,7 @@ class MainWindow(QMainWindow):
         algoritmos_menu.addAction(multiplicador_constante_action)
         algoritmos_menu.addAction(congruencial_lineal_action)
         algoritmos_menu.addAction(transformada_inversa_exponencial_action)
+        algoritmos_menu.addAction(congruencial_no_lineal_cuadratico_action)
         algoritmos_menu.addAction(esperanza_action)
 
     def openProductoMedio(self):
@@ -76,6 +80,11 @@ class MainWindow(QMainWindow):
         self.ui = TransformadaInversaExponencial()
         return self.ui
 
+    def openCongruencialNoLinealCuadratico(self):
+        self.ui = CongruencialNoLinealCuadraticoView()
+        return self.ui
+
     def openEsperanza(self):
         self.ui = EsperanzaView()
         return self.ui
+
