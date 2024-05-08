@@ -1,6 +1,10 @@
+import os
+
 from PyQt6.QtWidgets import QTableWidgetItem
 
 from PyQt6.QtWidgets import QMessageBox
+
+
 
 
 def message(message):
@@ -18,10 +22,12 @@ def add_to_table(table, data):
         table.setColumnCount(cols)
 
         for i, row_data in enumerate(data):
-            for j, (key, value) in enumerate(row_data.items()):
-                item_text = f'{key}: {value}'
+            for j, value in enumerate(row_data):
+                item_text = str(value)
                 item = QTableWidgetItem(item_text)
                 table.setItem(i, j, item)
+
+        table.resizeColumnsToContents()
                 
 
 def number_divide(number):
@@ -35,3 +41,4 @@ def number_divide(number):
         number_str = ''.join(map(str, half_number))
 
         return number_str
+

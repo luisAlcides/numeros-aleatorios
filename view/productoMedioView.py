@@ -1,3 +1,4 @@
+import os
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QAction, QIcon, QFont
@@ -5,6 +6,10 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QTableWidge
     QTableWidgetItem, QComboBox, QToolBar, QMainWindow, QPushButton, QHBoxLayout, QMenu
 
 from utils.util import add_to_table, number_divide
+
+script_directory = os.path.dirname(os.path.abspath(__file__))
+ico_solve = os.path.join(script_directory, 'icons', 'solve.png')
+ico_clean = os.path.join(script_directory, 'icons', 'clean.png')
 
 class ProductoMedioView(QMainWindow):
     def __init__(self):
@@ -25,9 +30,9 @@ class ProductoMedioView(QMainWindow):
         self.label_number_random = QLabel('Numeros de variables aleatorias:')
         self.input_number_random = QLineEdit()
         self.input_number_random.setText('5')
-        
-        self.btn_calc = QPushButton('Calcular')
-        self.btn_clean = QPushButton('Limpiar')
+
+        self.btn_calc = QPushButton(QIcon(ico_solve), 'Calcular')
+        self.btn_clean = QPushButton(QIcon(ico_clean), 'Limpiar')
         
         self.layout_buttons = QHBoxLayout()
         self.btn_calc.clicked.connect(self.multiply)
@@ -59,7 +64,7 @@ class ProductoMedioView(QMainWindow):
 
     def multiply(self):
         try:
-            x1 = int(self.input_x1.text().strip())  # Convertir directamente a int
+            x1 = int(self.input_x1.text().strip())
             x0 = int(self.input_x0.text().strip())
             quantity_random = int(self.input_number_random.text().strip())
             

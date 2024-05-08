@@ -1,5 +1,9 @@
+import os
 import random
 from re import S
+
+import numpy as np
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QIcon, QFont
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QTableWidget, \
@@ -7,91 +11,103 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QTableWidge
 
 from utils.util import add_to_table
 
+script_directory = os.path.dirname(os.path.abspath(__file__))
+ico_solve = os.path.join(script_directory, 'icons', 'solve.png')
+ico_clean = os.path.join(script_directory, 'icons', 'clean.png')
 
 class EsperanzaView(QMainWindow):
     def __init__(self):
-        super().__init__()  
-        self.setWindowTitle('Esperanza')
+        super().__init__()
+        self.setWindowTitle('Esperanza y Varianza')
         self.setFont(QFont('Arial', 16))
         self.showMaximized()
-        
+
         self.layout = QVBoxLayout()
-        
-        self.Label_x0 = QLabel('X0')
-        self.input_x0 = QLineEdit()
-        
-        self.label_m = QLabel('m')
-        self.input_m = QLineEdit()
-        self.label_a = QLabel('a')
-        self.input_a = QLineEdit()
-        
-        self.label_c = QLabel('c')
-        self.input_c = QLineEdit()
-        
-        self.label_number_random = QLabel('Numeros de variables aleatorias:')
-        self.input_number_random = QLineEdit()
-        
-        self.btn_calc = QPushButton('Calcular')
-        self.btn_clean = QPushButton('Limpiar')
-        
+
+        self.label_info = QLabel('Ingrese los valores de x,y separados por coma')
+        self.label_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.label_x = QLabel('x')
+        self.input_x = QLineEdit()
+
+        self.label_y = QLabel('y')
+        self.input_y = QLineEdit()
+
+        self.btn_calc = QPushButton(QIcon(ico_solve), 'Calcular')
+        self.btn_clean = QPushButton(QIcon(ico_clean), 'Limpiar')
+
         self.layout_buttons = QHBoxLayout()
-        
-        self.btn_calc.clicked.connect(self.linearCongruentialMethod)
+
+        self.btn_calc.clicked.connect(self.calc_esperanza)
         self.btn_clean.clicked.connect(self.clean)
-        
+
         self.layout_buttons.addWidget(self.btn_calc)
         self.layout_buttons.addWidget(self.btn_clean)
-        
-        
+
         self.table = QTableWidget()
-        
-        self.layout.addWidget(self.Label_x0)
-        self.layout.addWidget(self.input_x0)
-        self.layout.addWidget(self.label_m)
-        self.layout.addWidget(self.input_m)
-        self.layout.addWidget(self.label_a)
-        self.layout.addWidget(self.input_a)
-        self.layout.addWidget(self.label_c)
-        self.layout.addWidget(self.input_c)
-        self.layout.addWidget(self.label_number_random)
-        self.layout.addWidget(self.input_number_random)
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(['x', 'y', 'P', 'E(x)', 'Var'])
+        self.label_ex_sum = QLabel('')
+        self.label_varianza_sum = QLabel('')
+
+        self.layout.addWidget(self.label_info)
+        self.layout.addWidget(self.label_x)
+        self.layout.addWidget(self.input_x)
+        self.layout.addWidget(self.label_y)
+        self.layout.addWidget(self.input_y)
         self.layout.addLayout(self.layout_buttons)
+        self.layout.addWidget(self.label_ex_sum)
+        self.layout.addWidget(self.label_varianza_sum)
         self.layout.addWidget(self.table)
-        
-        
+
         self.central_widget = QWidget()
         self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
-        
-    
-    
-    def linearCongruentialMethod(self):
+
+    def esperanza(self, x, probabilidad):
+        esp = []
+        for g, p in zip(x, probabilidad):
+            esp.append(g * p)
+        return esp
+
+    def varianza(self, xi, exsum, prob):
+        res = []
+        for x, p in zip(xi, prob):
+            formula = ((x - exsum) ** 2) * p
+            res.append(formula)
+        return res
+
+    def calc_esperanza(self):
         try:
-            randomNums = []
-            Xo = int(self.input_x0.text().strip())
-            m = int(self.input_m.text().strip())
-            a = int(self.input_a.text().strip())
-            c = int(self.input_c.text().strip())
-            noOfRandomNums = int(self.input_number_random.text().strip())
-            
-            randomNums.append({'X0': Xo, 'm': m, 'a': a, 'c': c, 'r': Xo / m})
+            x_input = self.input_x.text().strip().split(',')
+            x = list(map(float, x_input))
 
-            for i in range(1, noOfRandomNums):
-                X = ((randomNums[i - 1]['X0'] * a) + c) % m
-                r = X / m
-                randomNums.append({f'X0': X, 'm': m, 'a': a, 'c': c, f'r': r})
+            y_input = self.input_y.text().strip().split(',')
+            y = list(map(float, y_input))
 
-            add_to_table(self.table, randomNums)
+            probabilidad = [yi / sum(y) for yi in y]
+            ex = self.esperanza(x, probabilidad)
+
+            ex_sum = sum(ex)
+            varianza = self.varianza(x, ex_sum, probabilidad)
+            varianza_sum = sum(varianza)
+
+            data = []
+            i = 0
+            for xi, yi, p, e, var in zip(x, y, probabilidad, ex, varianza):
+                data.append([xi, yi, p, e, var])
+                i += 1
+            self.label_ex_sum.setText(f'suma E(x) = {ex_sum}')
+            self.label_varianza_sum.setText(f'suma Varianza = {varianza_sum}')
+            add_to_table(self.table, data)
         except Exception as e:
             print(e)
-        
-    
+
     def clean(self):
-        self.input_x0.setText('')
-        self.input_m.setText('')
-        self.input_a.setText('')
-        self.input_c.setText('')
-        self.input_number_random.setText('')
+        self.input_x.setText('')
+        self.input_y.setText('')
+        self.label_ex_sum.setText('')
+        self.label_varianza_sum.setText('')
         self.table.setRowCount(0)
         self.table.setColumnCount(0)
-        self.table.setHorizontalHeaderLabels([])
+        self.table.setHorizontalHeaderLabels(['x', 'y', 'P', 'E(x)', 'Var'])
