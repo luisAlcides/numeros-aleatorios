@@ -108,6 +108,7 @@ class EsperanzaView(QMainWindow):
             self.label_varianza_sum.setText(f'suma Varianza = {varianza_sum}')
             self.label_desviacion.setText(f'Desviacion estandar = {desviacion_standar}')
             self.label_mean.setText(f'Media = {mean}')
+            print(mean)
             add_to_table(self.table, data)
         except Exception as e:
             print(e)
