@@ -86,6 +86,7 @@ class TransformadaInversaExponencial(QMainWindow):
                     result.append([ri[x], res])
 
             add_to_table(self.table, result)
+            self.table.setHorizontalHeaderLabels(['ri', 'Xi'])
 
         except ValueError as e:
             print("Error al convertir a entero:", e)

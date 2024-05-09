@@ -89,6 +89,7 @@ class CongruencialNoLinealCuadraticoView(QMainWindow):
                 randomNums.append([X,r])
 
             add_to_table(self.table, randomNums)
+            self.table.setHorizontalHeaderLabels(['x', 'r'])
         except Exception as e:
             print(e)
 

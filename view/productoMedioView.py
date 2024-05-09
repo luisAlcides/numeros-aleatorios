@@ -86,6 +86,7 @@ class ProductoMedioView(QMainWindow):
                     x0 = int(x1)
                     x1 = int(x)
             add_to_table(self.table, result)
+            self.table.setHorizontalHeaderLabels(['y', 'x', 'r'])
 
         except ValueError as e:
             print("Error al convertir a entero:", e)

@@ -83,6 +83,7 @@ class EsperanzaView(QMainWindow):
         return res
 
     def calc_esperanza(self):
+
         try:
             x_input = self.input_x.text().strip().split(',')
             x = list(map(float, x_input))
@@ -108,8 +109,8 @@ class EsperanzaView(QMainWindow):
             self.label_varianza_sum.setText(f'suma Varianza = {varianza_sum}')
             self.label_desviacion.setText(f'Desviacion estandar = {desviacion_standar}')
             self.label_mean.setText(f'Media = {mean}')
-            print(mean)
             add_to_table(self.table, data)
+            self.table.setHorizontalHeaderLabels(['x', 'y', 'P', 'E(x)', 'Var'])
         except Exception as e:
             print(e)
 

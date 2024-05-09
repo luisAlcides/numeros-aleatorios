@@ -77,6 +77,7 @@ class CuadradoMedioView(QMainWindow):
                     result.append([y, x, r])
                     x0 = x
             add_to_table(self.table, result)
+            self.table.setHorizontalHeaderLabels(['y', 'x', 'r'])
         except Exception as e:
             print(e)
 

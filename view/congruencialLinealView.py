@@ -96,6 +96,7 @@ class CongruencialLinealView(QMainWindow):
             self.label_m.setText(f'm = {m}')
 
             add_to_table(self.table, randomNums)
+            self.table.setHorizontalHeaderLabels(['X', 'r'])
         except Exception as e:
             print(e)
 
